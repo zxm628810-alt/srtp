@@ -4,6 +4,8 @@ Models:
   rf_sensor        RandomForest baseline using only 128 sensor features
   dnn_sensor       MLP neural network using only sensor features
   dnn_sensor_time  MLP using sensor features plus known batch/time feature
+  dnn_sensor_baseline  MLP using raw features plus changes relative to the
+                       earliest available sensor baseline
 
 The test batches are never included in model fitting or scaler fitting.
 """
@@ -32,17 +34,30 @@ def make_model(kind: str):
                                max_iter=300, random_state=42))
     ])
 
-def select_x(frame: pd.DataFrame, kind: str) -> pd.DataFrame:
+def select_x(frame: pd.DataFrame, kind: str, baseline: pd.Series | None = None) -> pd.DataFrame:
     x = frame[FEATURES].copy()
     if kind == "dnn_sensor_time":
         # Device age/batch is assumed known at inference. It is not fitted using test labels.
         x["time_batch"] = frame["batch_id"].astype(float)
+    elif kind == "dnn_sensor_baseline":
+        if baseline is None:
+            raise ValueError("基线相对特征需要训练集传感器基线")
+        # Baseline comes only from the earliest batch in the training history.
+        # Thus future test-batch values or labels never influence this transform.
+        safe_baseline = baseline.replace(0, 1e-8)
+        relative = x.divide(safe_baseline, axis="columns").subtract(1.0)
+        relative.columns = [f"relative_{name}" for name in FEATURES]
+        x = pd.concat([x, relative], axis=1)
     return x
 
 def evaluate(train: pd.DataFrame, test: pd.DataFrame, kind: str, output: Path, tag: str) -> dict:
     model = make_model(kind)
-    model.fit(select_x(train, kind), train["gas_name"])
-    pred = model.predict(select_x(test, kind))
+    baseline = None
+    if kind == "dnn_sensor_baseline":
+        earliest_batch = train.batch_id.min()
+        baseline = train.loc[train.batch_id == earliest_batch, FEATURES].median()
+    model.fit(select_x(train, kind, baseline), train["gas_name"])
+    pred = model.predict(select_x(test, kind, baseline))
     row = {
         "experiment": tag, "model": kind,
         "train_batches": ",".join(map(str, sorted(train.batch_id.unique()))),
@@ -91,8 +106,8 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--csv", type=Path, default=Path(__file__).parent / "all_batches.csv")
     ap.add_argument("--output", type=Path, default=Path(__file__).parent / "drift_results")
-    ap.add_argument("--models", nargs="+", choices=["rf_sensor", "dnn_sensor", "dnn_sensor_time"],
-                    default=["rf_sensor", "dnn_sensor", "dnn_sensor_time"])
+    ap.add_argument("--models", nargs="+", choices=["rf_sensor", "dnn_sensor", "dnn_sensor_time", "dnn_sensor_baseline"],
+                    default=["rf_sensor", "dnn_sensor", "dnn_sensor_time", "dnn_sensor_baseline"])
     ap.add_argument("--experiments", nargs="+", choices=["fixed", "rolling"], default=["fixed", "rolling"])
     ap.add_argument("--test-batches", nargs="+", type=int, choices=range(4, 11), default=list(range(4, 11)))
     args = ap.parse_args(); main(args.csv, args.output, args.models, args.experiments, args.test_batches)

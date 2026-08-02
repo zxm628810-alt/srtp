@@ -1,0 +1,7 @@
+﻿,Ethanol,Ethylene,Ammonia,Acetaldehyde,Acetone,Toluene
+Ethanol,100,0,0,0,0,0
+Ethylene,1,74,0,0,0,0
+Ammonia,4,0,73,0,0,1
+Acetaldehyde,0,0,0,55,0,0
+Acetone,0,2,0,0,59,0
+Toluene,0,98,0,0,2,1

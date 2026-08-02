@@ -1,0 +1,15 @@
+﻿true_gas,predicted_as,errors,true_gas_error_rate
+Ethylene,Toluene,337,0.5616666666666666
+Acetone,Toluene,220,0.36666666666666664
+Acetone,Ethylene,118,0.19666666666666666
+Toluene,Ethylene,98,0.16333333333333333
+Acetaldehyde,Ammonia,68,0.11333333333333333
+Ammonia,Toluene,58,0.09666666666666666
+Ethanol,Ethylene,35,0.058333333333333334
+Ethanol,Ammonia,33,0.055
+Acetaldehyde,Ethylene,23,0.03833333333333333
+Ethanol,Acetaldehyde,22,0.03666666666666667
+Ethanol,Acetone,11,0.018333333333333333
+Acetone,Ammonia,10,0.016666666666666666
+Ammonia,Ethylene,2,0.0033333333333333335
+Acetaldehyde,Ethanol,1,0.0016666666666666668

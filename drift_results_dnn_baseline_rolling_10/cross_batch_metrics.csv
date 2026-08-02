@@ -1,0 +1,2 @@
+﻿experiment,model,train_batches,test_batch,n_train,n_test,accuracy,macro_f1,recall_Ethanol,recall_Ethylene,recall_Ammonia,recall_Acetaldehyde,recall_Acetone,recall_Toluene,concentration_mae,concentration_r2
+rolling,dnn_sensor_baseline,"1,2,3,4,5,6,7,8,9",10,10310,3600,0.6813888888888889,0.6830087997797106,0.855,0.31166666666666665,0.725,0.8366666666666667,0.505,0.855,121.48195937499999,0.3657312935381547
