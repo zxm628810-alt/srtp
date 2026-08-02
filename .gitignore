@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.venv/
+*.tmp
+*.log
+*.joblib
+*.rar
+*.zip
+*.pt
+*.xlsx
+*.docx
+*.doc
+uci_gas/

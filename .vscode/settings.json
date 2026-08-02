@@ -1,0 +1,18 @@
+{
+    "python-envs.pythonProjects": [
+        {
+            "path": ".",
+            "envManager": "ms-python.python:conda",
+            "packageManager": "ms-python.python:conda"
+        }
+    ],
+    "terminal.integrated.defaultProfile.windows": "Git Bash",
+    "terminal.integrated.profiles.windows": {
+        "Git Bash": {
+            "path": "D:\\Git\\bin\\bash.exe",
+            "args": []
+        }
+    },
+    "files.encoding": "utf8",
+    "files.autoGuessEncoding": false
+}
