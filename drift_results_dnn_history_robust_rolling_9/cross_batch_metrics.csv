@@ -1,0 +1,2 @@
+﻿experiment,model,train_batches,test_batch,n_train,n_test,accuracy,macro_f1,recall_Ethanol,recall_Ethylene,recall_Ammonia,recall_Acetaldehyde,recall_Acetone,recall_Toluene,low_ppm_n,low_ppm_accuracy,concentration_mae,concentration_r2
+rolling,dnn_sensor_history_robust,"1,2,3,4,5,6,7,8",9,9840,470,0.7659574468085106,0.7453051991286778,1.0,0.9466666666666667,0.9358974358974359,1.0,1.0,0.0,217,0.5345622119815668,26.21685904255319,0.4949744134378288

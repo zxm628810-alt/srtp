@@ -10,6 +10,8 @@ Models:
                                calculated only from earlier historical batches
   dnn_sensor_weighted  MLP that upweights difficult gases and low-concentration
                        training samples
+  dnn_sensor_history_robust  MLP using rolling historical median and IQR
+                             calibration features
 
 The test batches are never included in model fitting or scaler fitting.
 """
@@ -65,6 +67,36 @@ def sliding_history_relative(frame: pd.DataFrame, history: pd.DataFrame, window:
     return result
 
 
+def sliding_history_robust_features(frame: pd.DataFrame, history: pd.DataFrame, window: int) -> pd.DataFrame:
+    """Create median-shift and IQR-normalized features from earlier batches only.
+
+    For every Batch b, medians and IQRs are computed using at most the previous
+    ``window`` batches.  The current batch never contributes to its own
+    calibration statistics.  The first training batch uses its own statistics
+    only as a finite-value fallback because no earlier history exists.
+    """
+    if window < 1:
+        raise ValueError("history window must be at least 1")
+    first_history = history.loc[history.batch_id == history.batch_id.min(), FEATURES]
+    fallback_median = first_history.median()
+    fallback_iqr = first_history.quantile(.75).subtract(first_history.quantile(.25))
+    outputs = []
+    for batch in sorted(frame.batch_id.unique()):
+        available = sorted(history.loc[history.batch_id < batch, "batch_id"].unique())
+        chosen = available[-window:]
+        reference = history.loc[history.batch_id.isin(chosen), FEATURES] if chosen else first_history
+        median = reference.median() if chosen else fallback_median
+        iqr = reference.quantile(.75).subtract(reference.quantile(.25)) if chosen else fallback_iqr
+        safe_iqr = iqr.mask(iqr.abs() < 1e-8, 1e-8)
+        current = frame.loc[frame.batch_id == batch, FEATURES]
+        shift = current.subtract(median, axis="columns")
+        robust_z = shift.divide(safe_iqr, axis="columns")
+        shift.columns = [f"history_shift_{name}" for name in FEATURES]
+        robust_z.columns = [f"history_iqr_z_{name}" for name in FEATURES]
+        outputs.append(pd.concat([shift, robust_z], axis=1))
+    return pd.concat(outputs).reindex(frame.index)
+
+
 def select_x(frame: pd.DataFrame, kind: str, baseline: pd.Series | None = None,
              history: pd.DataFrame | None = None, history_window: int = 3) -> pd.DataFrame:
     x = frame[FEATURES].copy()
@@ -84,6 +116,10 @@ def select_x(frame: pd.DataFrame, kind: str, baseline: pd.Series | None = None,
         if history is None:
             raise ValueError("sliding history features require historical training batches")
         x = pd.concat([x, sliding_history_relative(frame, history, history_window)], axis=1)
+    elif kind == "dnn_sensor_history_robust":
+        if history is None:
+            raise ValueError("robust history features require historical training batches")
+        x = pd.concat([x, sliding_history_robust_features(frame, history, history_window)], axis=1)
     return x
 
 
@@ -164,8 +200,8 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--csv", type=Path, default=Path(__file__).parent / "all_batches.csv")
     ap.add_argument("--output", type=Path, default=Path(__file__).parent / "drift_results")
-    ap.add_argument("--models", nargs="+", choices=["rf_sensor", "dnn_sensor", "dnn_sensor_time", "dnn_sensor_baseline", "dnn_sensor_history_baseline", "dnn_sensor_weighted"],
-                    default=["rf_sensor", "dnn_sensor", "dnn_sensor_time", "dnn_sensor_baseline", "dnn_sensor_history_baseline", "dnn_sensor_weighted"])
+    ap.add_argument("--models", nargs="+", choices=["rf_sensor", "dnn_sensor", "dnn_sensor_time", "dnn_sensor_baseline", "dnn_sensor_history_baseline", "dnn_sensor_weighted", "dnn_sensor_history_robust"],
+                    default=["rf_sensor", "dnn_sensor", "dnn_sensor_time", "dnn_sensor_baseline", "dnn_sensor_history_baseline", "dnn_sensor_weighted", "dnn_sensor_history_robust"])
     ap.add_argument("--experiments", nargs="+", choices=["fixed", "rolling"], default=["fixed", "rolling"])
     ap.add_argument("--test-batches", nargs="+", type=int, choices=range(4, 11), default=list(range(4, 11)))
     ap.add_argument("--history-window", type=int, default=3,
