@@ -13,21 +13,19 @@ MODEL_COLUMNS = {
     "RandomForest": ("RF_准确率", "RF_macroF1"),
     "DNN (sensor only)": ("DNN传感器_准确率", "DNN传感器_macroF1"),
     "DNN (+ batch ID)": ("DNN传感器加批次号_准确率", "DNN传感器加批次号_macroF1"),
-    "DNN (+ baseline features)": ("DNN基线相对特征_准确率", "DNN基线相对特征_macroF1"),
+    "DNN (+ fixed baseline)": ("DNN固定基线_准确率", "DNN固定基线_macroF1"),
+    "DNN (+ sliding history baseline)": ("DNN滑动历史基线_准确率", "DNN滑动历史基线_macroF1"),
+    "DNN (+ difficult-sample weights)": ("DNN困难样本加权_准确率", "DNN困难样本加权_macroF1"),
 }
-MARKERS = ["o", "s", "^", "D"]
+MARKERS = ["o", "s", "^", "D", "P", "X"]
 
 
 def draw(metric_index: int, title: str, y_label: str, filename: str) -> None:
     df = pd.read_csv(DATA, encoding="utf-8-sig")
     fig, ax = plt.subplots(figsize=(9, 5.4), dpi=160)
-    final_label_offsets = [-2, -10, 12, 3]
-    for ((name, columns), marker, offset) in zip(MODEL_COLUMNS.items(), MARKERS, final_label_offsets):
+    for ((name, columns), marker) in zip(MODEL_COLUMNS.items(), MARKERS):
         values = df[columns[metric_index]]
         ax.plot(df["测试批次"], values, marker=marker, linewidth=2.2, markersize=6, label=name)
-        # Directly label the final batch so the most important future-test result is visible.
-        ax.annotate(f"{values.iloc[-1]:.1%}", (df["测试批次"].iloc[-1], values.iloc[-1]),
-                    xytext=(9, offset), textcoords="offset points", va="center", fontsize=8)
 
     ax.set_title(title, pad=12)
     ax.set_xlabel("Future test batch (trained only on earlier batches)")
