@@ -63,3 +63,29 @@ MAE 单位为 ppm，越小越好；R² 越接近 1 越好。R² 为负表示该�
 - 每个模型、每个 Batch 的真实浓度、预测浓度和绝对误差：`concentration_drift_results/predictions_*.csv`
 - 运行脚本：`run_concentration_drift_experiments.py`
 - 指标汇总脚本：`summarize_concentration_results.py`
+
+## 图表
+
+- `concentration_drift_figures/浓度回归_MAE_滚动曲线.png`
+- `concentration_drift_figures/浓度回归_R2_滚动曲线.png`
+- `concentration_drift_figures/浓度回归_低浓度MAE_滚动曲线.png`
+- `concentration_drift_figures/浓度回归_逐气体MAE_Batch9_10.png`
+- `concentration_drift_figures/浓度回归_真实预测散点_Batch10.png`
+
+## 两阶段“先识别、再专属回归”对照
+
+为检验“不同气体使用不同浓度回归器”是否更合适，新增两阶段 DNN：第一阶段使用历史窗口 3 特征识别气体，第二阶段按**预测出的**气体类别调用该气体的专属 DNN 浓度回归器。这样会把实际部署中可能出现的类别误判一并计入浓度误差。
+
+| 测试 Batch | 分类准确率 | 两阶段 MAE（ppm） | R² | ≤50 ppm MAE（ppm） |
+|---:|---:|---:|---:|---:|
+| 4 | 0.752 | 88.42 | -3.174 | 129.49 |
+| 5 | 0.990 | 26.44 | 0.741 | 10.54 |
+| 6 | 0.755 | 59.31 | -0.692 | 66.41 |
+| 7 | 0.774 | 44.32 | 0.399 | 50.70 |
+| 8 | 0.935 | 33.03 | 0.166 | 48.71 |
+| 9 | 0.768 | 31.92 | 0.343 | 39.24 |
+| 10 | 0.701 | 71.86 | 0.862 | 28.05 |
+
+结论：两阶段方案在 Batch 10 的 R²（0.862）略高于单阶段历史窗口 3（0.841），但总体 MAE（71.86 ppm）高于单阶段历史窗口 3（62.65 ppm）。因此当前数据下，类别误判会传递并放大浓度误差；两阶段模型是有价值的部署对照，但暂不替代单阶段历史窗口 3 作为当前最佳浓度回归方案。
+
+可复核文件：`two_stage_concentration_results/cross_batch_two_stage_metrics.csv`、`run_two_stage_concentration_experiment.py`。
