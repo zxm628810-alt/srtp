@@ -11,3 +11,4 @@ __pycache__/
 *.docx
 *.doc
 uci_gas/
+.matplotlib/
