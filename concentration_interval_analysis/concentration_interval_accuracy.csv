@@ -1,0 +1,121 @@
+﻿model_label,test_batch,interval,n_samples,accuracy
+DNN (sensor only),4,100-200 ppm,10,0.2
+DNN (sensor only),4,25-50 ppm,5,1.0
+DNN (sensor only),4,50-100 ppm,79,0.8101
+DNN (sensor only),4,>200 ppm,67,0.9701
+DNN (sensor only),5,100-200 ppm,90,0.9889
+DNN (sensor only),5,25-50 ppm,20,1.0
+DNN (sensor only),5,50-100 ppm,12,1.0
+DNN (sensor only),5,>200 ppm,75,0.9733
+DNN (sensor only),6,100-200 ppm,206,0.8981
+DNN (sensor only),6,25-50 ppm,1314,0.7428
+DNN (sensor only),6,50-100 ppm,338,0.7189
+DNN (sensor only),6,<=25 ppm,157,0.3185
+DNN (sensor only),6,>200 ppm,285,0.9544
+DNN (sensor only),7,100-200 ppm,1077,0.8774
+DNN (sensor only),7,25-50 ppm,378,0.619
+DNN (sensor only),7,50-100 ppm,905,0.7425
+DNN (sensor only),7,<=25 ppm,508,0.4094
+DNN (sensor only),7,>200 ppm,745,0.9302
+DNN (sensor only),8,100-200 ppm,39,0.7179
+DNN (sensor only),8,50-100 ppm,119,0.9664
+DNN (sensor only),8,<=25 ppm,134,0.9478
+DNN (sensor only),8,>200 ppm,2,0.5
+DNN (sensor only),9,100-200 ppm,98,1.0
+DNN (sensor only),9,50-100 ppm,155,0.9419
+DNN (sensor only),9,<=25 ppm,217,0.5392
+DNN (sensor only),10,100-200 ppm,800,0.6075
+DNN (sensor only),10,25-50 ppm,600,0.64
+DNN (sensor only),10,50-100 ppm,600,0.6983
+DNN (sensor only),10,<=25 ppm,500,0.668
+DNN (sensor only),10,>200 ppm,1100,0.8
+DNN + IQR enhanced,4,100-200 ppm,10,0.1
+DNN + IQR enhanced,4,25-50 ppm,5,0.0
+DNN + IQR enhanced,4,50-100 ppm,79,0.7342
+DNN + IQR enhanced,4,>200 ppm,67,0.9254
+DNN + IQR enhanced,5,100-200 ppm,90,0.9889
+DNN + IQR enhanced,5,25-50 ppm,20,1.0
+DNN + IQR enhanced,5,50-100 ppm,12,1.0
+DNN + IQR enhanced,5,>200 ppm,75,0.9867
+DNN + IQR enhanced,6,100-200 ppm,206,0.8981
+DNN + IQR enhanced,6,25-50 ppm,1314,0.7473
+DNN + IQR enhanced,6,50-100 ppm,338,0.6302
+DNN + IQR enhanced,6,<=25 ppm,157,0.4459
+DNN + IQR enhanced,6,>200 ppm,285,0.9649
+DNN + IQR enhanced,7,100-200 ppm,1077,0.9239
+DNN + IQR enhanced,7,25-50 ppm,378,0.5397
+DNN + IQR enhanced,7,50-100 ppm,905,0.6409
+DNN + IQR enhanced,7,<=25 ppm,508,0.3642
+DNN + IQR enhanced,7,>200 ppm,745,0.9208
+DNN + IQR enhanced,8,100-200 ppm,39,0.6923
+DNN + IQR enhanced,8,50-100 ppm,119,0.9496
+DNN + IQR enhanced,8,<=25 ppm,134,0.9403
+DNN + IQR enhanced,8,>200 ppm,2,0.5
+DNN + IQR enhanced,9,100-200 ppm,98,1.0
+DNN + IQR enhanced,9,50-100 ppm,155,0.9419
+DNN + IQR enhanced,9,<=25 ppm,217,0.5346
+DNN + IQR enhanced,10,100-200 ppm,800,0.6438
+DNN + IQR enhanced,10,25-50 ppm,600,0.5017
+DNN + IQR enhanced,10,50-100 ppm,600,0.6117
+DNN + IQR enhanced,10,<=25 ppm,500,0.64
+DNN + IQR enhanced,10,>200 ppm,1100,0.8364
+DNN + batch ID,4,100-200 ppm,10,0.0
+DNN + batch ID,4,25-50 ppm,5,0.2
+DNN + batch ID,4,50-100 ppm,79,0.7215
+DNN + batch ID,4,>200 ppm,67,0.9254
+DNN + batch ID,5,100-200 ppm,90,1.0
+DNN + batch ID,5,25-50 ppm,20,1.0
+DNN + batch ID,5,50-100 ppm,12,1.0
+DNN + batch ID,5,>200 ppm,75,0.96
+DNN + batch ID,6,100-200 ppm,206,0.932
+DNN + batch ID,6,25-50 ppm,1314,0.7481
+DNN + batch ID,6,50-100 ppm,338,0.716
+DNN + batch ID,6,<=25 ppm,157,0.2866
+DNN + batch ID,6,>200 ppm,285,0.9789
+DNN + batch ID,7,100-200 ppm,1077,0.8589
+DNN + batch ID,7,25-50 ppm,378,0.6085
+DNN + batch ID,7,50-100 ppm,905,0.6398
+DNN + batch ID,7,<=25 ppm,508,0.565
+DNN + batch ID,7,>200 ppm,745,0.9624
+DNN + batch ID,8,100-200 ppm,39,0.7179
+DNN + batch ID,8,50-100 ppm,119,0.9664
+DNN + batch ID,8,<=25 ppm,134,0.9179
+DNN + batch ID,8,>200 ppm,2,0.5
+DNN + batch ID,9,100-200 ppm,98,1.0
+DNN + batch ID,9,50-100 ppm,155,0.9484
+DNN + batch ID,9,<=25 ppm,217,0.5115
+DNN + batch ID,10,100-200 ppm,800,0.615
+DNN + batch ID,10,25-50 ppm,600,0.63
+DNN + batch ID,10,50-100 ppm,600,0.7267
+DNN + batch ID,10,<=25 ppm,500,0.664
+DNN + batch ID,10,>200 ppm,1100,0.8418
+DNN + sliding baseline,4,100-200 ppm,10,0.1
+DNN + sliding baseline,4,25-50 ppm,5,0.0
+DNN + sliding baseline,4,50-100 ppm,79,0.7342
+DNN + sliding baseline,4,>200 ppm,67,0.9254
+DNN + sliding baseline,5,100-200 ppm,90,0.9889
+DNN + sliding baseline,5,25-50 ppm,20,1.0
+DNN + sliding baseline,5,50-100 ppm,12,1.0
+DNN + sliding baseline,5,>200 ppm,75,0.9867
+DNN + sliding baseline,6,100-200 ppm,206,0.9029
+DNN + sliding baseline,6,25-50 ppm,1314,0.7489
+DNN + sliding baseline,6,50-100 ppm,338,0.7071
+DNN + sliding baseline,6,<=25 ppm,157,0.3185
+DNN + sliding baseline,6,>200 ppm,285,0.9719
+DNN + sliding baseline,7,100-200 ppm,1077,0.8709
+DNN + sliding baseline,7,25-50 ppm,378,0.7143
+DNN + sliding baseline,7,50-100 ppm,905,0.7039
+DNN + sliding baseline,7,<=25 ppm,508,0.5315
+DNN + sliding baseline,7,>200 ppm,745,0.9128
+DNN + sliding baseline,8,100-200 ppm,39,0.7179
+DNN + sliding baseline,8,50-100 ppm,119,0.958
+DNN + sliding baseline,8,<=25 ppm,134,0.9851
+DNN + sliding baseline,8,>200 ppm,2,0.5
+DNN + sliding baseline,9,100-200 ppm,98,1.0
+DNN + sliding baseline,9,50-100 ppm,155,0.9484
+DNN + sliding baseline,9,<=25 ppm,217,0.5346
+DNN + sliding baseline,10,100-200 ppm,800,0.6175
+DNN + sliding baseline,10,25-50 ppm,600,0.6067
+DNN + sliding baseline,10,50-100 ppm,600,0.655
+DNN + sliding baseline,10,<=25 ppm,500,0.688
+DNN + sliding baseline,10,>200 ppm,1100,0.8427
