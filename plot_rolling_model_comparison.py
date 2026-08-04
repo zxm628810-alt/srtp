@@ -16,8 +16,9 @@ MODEL_COLUMNS = {
     "DNN (+ fixed baseline)": ("DNN固定基线_准确率", "DNN固定基线_macroF1"),
     "DNN (+ sliding history baseline)": ("DNN滑动历史基线_准确率", "DNN滑动历史基线_macroF1"),
     "DNN (+ difficult-sample weights)": ("DNN困难样本加权_准确率", "DNN困难样本加权_macroF1"),
+    "Fusion DNN (PyTorch)": ("融合DNN_准确率", "融合DNN_macroF1"),
 }
-MARKERS = ["o", "s", "^", "D", "P", "X"]
+MARKERS = ["o", "s", "^", "D", "P", "X", "*"]
 
 
 def draw(metric_index: int, title: str, y_label: str, filename: str) -> None:

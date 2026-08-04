@@ -1,0 +1,57 @@
+﻿model_label,test_batch,low_ppm,correct,accuracy
+DNN (sensor only),4,False,0.8397435897435898,0.8397
+DNN (sensor only),4,True,1.0,1.0
+DNN (sensor only),5,False,0.9830508474576272,0.9831
+DNN (sensor only),5,True,1.0,1.0
+DNN (sensor only),6,False,0.8443908323281062,0.8444
+DNN (sensor only),6,True,0.6974847042828008,0.6975
+DNN (sensor only),7,False,0.847084708470847,0.8471
+DNN (sensor only),7,True,0.49887133182844245,0.4989
+DNN (sensor only),8,False,0.9,0.9
+DNN (sensor only),8,True,0.9477611940298507,0.9478
+DNN (sensor only),9,False,0.9644268774703557,0.9644
+DNN (sensor only),9,True,0.5391705069124424,0.5392
+DNN (sensor only),10,False,0.714,0.714
+DNN (sensor only),10,True,0.6527272727272727,0.6527
+DNN + IQR enhanced,4,False,0.7756410256410257,0.7756
+DNN + IQR enhanced,4,True,0.0,0.0
+DNN + IQR enhanced,5,False,0.9887005649717514,0.9887
+DNN + IQR enhanced,5,True,1.0,1.0
+DNN + IQR enhanced,6,False,0.8118214716525934,0.8118
+DNN + IQR enhanced,6,True,0.7151597552685248,0.7152
+DNN + IQR enhanced,7,False,0.8291162449578291,0.8291
+DNN + IQR enhanced,7,True,0.43905191873589167,0.4391
+DNN + IQR enhanced,8,False,0.88125,0.8812
+DNN + IQR enhanced,8,True,0.9402985074626866,0.9403
+DNN + IQR enhanced,9,False,0.9644268774703557,0.9644
+DNN + IQR enhanced,9,True,0.5345622119815668,0.5346
+DNN + IQR enhanced,10,False,0.7208,0.7208
+DNN + IQR enhanced,10,True,0.5645454545454546,0.5645
+DNN + batch ID,4,False,0.7628205128205128,0.7628
+DNN + batch ID,4,True,0.2,0.2
+DNN + batch ID,5,False,0.9830508474576272,0.9831
+DNN + batch ID,5,True,1.0,1.0
+DNN + batch ID,6,False,0.8600723763570567,0.8601
+DNN + batch ID,6,True,0.698844323589395,0.6988
+DNN + batch ID,7,False,0.8144481114778145,0.8144
+DNN + batch ID,7,True,0.5835214446952596,0.5835
+DNN + batch ID,8,False,0.9,0.9
+DNN + batch ID,8,True,0.917910447761194,0.9179
+DNN + batch ID,9,False,0.9683794466403162,0.9684
+DNN + batch ID,9,True,0.511520737327189,0.5115
+DNN + batch ID,10,False,0.7416,0.7416
+DNN + batch ID,10,True,0.6454545454545455,0.6455
+DNN + sliding baseline,4,False,0.7756410256410257,0.7756
+DNN + sliding baseline,4,True,0.0,0.0
+DNN + sliding baseline,5,False,0.9887005649717514,0.9887
+DNN + sliding baseline,5,True,1.0,1.0
+DNN + sliding baseline,6,False,0.8468033775633294,0.8468
+DNN + sliding baseline,6,True,0.7029231815091774,0.7029
+DNN + sliding baseline,7,False,0.8269160249358269,0.8269
+DNN + sliding baseline,7,True,0.6094808126410836,0.6095
+DNN + sliding baseline,8,False,0.89375,0.8938
+DNN + sliding baseline,8,True,0.9850746268656716,0.9851
+DNN + sliding baseline,9,False,0.9683794466403162,0.9684
+DNN + sliding baseline,9,True,0.5345622119815668,0.5346
+DNN + sliding baseline,10,False,0.7256,0.7256
+DNN + sliding baseline,10,True,0.6436363636363637,0.6436
