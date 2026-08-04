@@ -57,6 +57,22 @@ def load_data(data_dir: Path):
         np.asarray(batch_ids, dtype=np.int64),
     )
 
+
+def load_csv(csv_path: Path):
+    """Load the project-standard parsed UCI CSV when raw .dat files are absent."""
+    frame = pd.read_csv(csv_path, encoding="utf-8-sig")
+    features = [f"feature_{index}" for index in range(1, N_SENSORS + 1)]
+    required = {"batch_id", "gas_class", "concentration_ppm", *features}
+    missing = required.difference(frame.columns)
+    if missing:
+        raise ValueError(f"CSV missing columns: {sorted(missing)[:5]}")
+    return (
+        frame[features].to_numpy(dtype=np.float32),
+        frame.gas_class.to_numpy(dtype=np.int64) - 1,
+        frame.concentration_ppm.to_numpy(dtype=np.float32),
+        frame.batch_id.to_numpy(dtype=np.int64),
+    )
+
 def build_time_features(batch_ids: np.ndarray) -> np.ndarray:
     norm = (batch_ids - 1).astype(np.float32) / (N_BATCHES - 1)
     one_hot = np.zeros((len(batch_ids), N_BATCHES), dtype=np.float32)
@@ -224,6 +240,8 @@ VARIANTS = {
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--data-dir", type=Path, default=Path(__file__).parent / "uci_gas"/"unzipped")
+    parser.add_argument("--csv", type=Path, default=None,
+                        help="parsed all_batches.csv; use this when raw batch*.dat files are unavailable")
     parser.add_argument("--output", type=Path, default=Path(__file__).parent / "drift_results_ablation")
     parser.add_argument("--epochs", type=int, default=80)
     parser.add_argument("--patience", type=int, default=12)
@@ -234,7 +252,7 @@ def main():
     device = "cuda" if args.device == "auto" and torch.cuda.is_available() else "cpu"
     print(f"Device: {device}")
 
-    x, gas_id, ppm, batch_id = load_data(args.data_dir)
+    x, gas_id, ppm, batch_id = load_csv(args.csv) if args.csv else load_data(args.data_dir)
     time_features = build_time_features(batch_id)
 
     all_rows = []
