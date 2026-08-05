@@ -44,7 +44,7 @@ ROOT = Path(__file__).parent
 FEATURES = [f"feature_{i}" for i in range(1, 129)]
 GAS_NAMES = ["Ethanol", "Ethylene", "Ammonia", "Acetaldehyde", "Acetone", "Toluene"]
 LOW_PPM = 50.0
-SEED = 42
+DEFAULT_SEED = 42
 
 # ---- MMD kernel (RBF / Gaussian) ----
 def gaussian_kernel(x: torch.Tensor, y: torch.Tensor, sigma: float = 1.0) -> torch.Tensor:
@@ -103,18 +103,21 @@ class EncoderMLP(nn.Module):
         return logits
 
 
-def seed_everything():
-    random.seed(SEED); np.random.seed(SEED); torch.manual_seed(SEED)
+def seed_everything(seed: int) -> None:
+    """Set all stochastic sources for a reproducible experimental run."""
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
 
 
 def train_model(x: np.ndarray, y: np.ndarray, batch_ids: np.ndarray,
                 mmd_lambda: float, lr: float = 1e-3, epochs: int = 250,
-                patience: int = 25) -> EncoderMLP:
+                patience: int = 25, seed: int = DEFAULT_SEED) -> EncoderMLP:
     """Train with optional MMD regularisation (mmd_lambda=0 = baseline)."""
 
-    seed_everything()
+    seed_everything(seed)
     train_idx, valid_idx = train_test_split(
-        np.arange(len(x)), test_size=.15, random_state=SEED, stratify=y,
+        np.arange(len(x)), test_size=.15, random_state=seed, stratify=y,
     )
 
     n_features, n_classes = x.shape[1], len(np.unique(y))
@@ -181,7 +184,7 @@ def train_model(x: np.ndarray, y: np.ndarray, batch_ids: np.ndarray,
 
 
 def evaluate(train: pd.DataFrame, test: pd.DataFrame, mmd_lambda: float,
-             output: Path) -> dict:
+             output: Path, seed: int = DEFAULT_SEED) -> dict:
     """Train on batches < k, test on batch k."""
 
     scaler = StandardScaler()
@@ -192,7 +195,7 @@ def evaluate(train: pd.DataFrame, test: pd.DataFrame, mmd_lambda: float,
     y_train = train.gas_name.map(class_to_id).values
     batch_ids_train = train.batch_id.values
 
-    model = train_model(x_train, y_train, batch_ids_train, mmd_lambda)
+    model = train_model(x_train, y_train, batch_ids_train, mmd_lambda, seed=seed)
 
     model.eval()
     with torch.no_grad():
@@ -206,6 +209,7 @@ def evaluate(train: pd.DataFrame, test: pd.DataFrame, mmd_lambda: float,
     row = {
         "model": "dnn_mmd" if mmd_lambda > 0 else "dnn_baseline",
         "mmd_lambda": mmd_lambda,
+        "seed": seed,
         "test_batch": batch,
         "n_train": len(train),
         "n_test": len(test),
@@ -223,7 +227,7 @@ def evaluate(train: pd.DataFrame, test: pd.DataFrame, mmd_lambda: float,
 
 
 def main(csv_path: Path, output: Path, dev_batches: list[int],
-         final_batches: list[int], lambdas: list[float]) -> None:
+         final_batches: list[int], lambdas: list[float], seed: int = DEFAULT_SEED) -> None:
     output.mkdir(parents=True, exist_ok=True)
     df = pd.read_csv(csv_path, encoding="utf-8-sig")
 
@@ -239,7 +243,7 @@ def main(csv_path: Path, output: Path, dev_batches: list[int],
         for batch in dev_batches:
             train = df[df["batch_id"] < batch]
             test = df[df["batch_id"] == batch]
-            row = evaluate(train, test, mmd_lambda, output)
+            row = evaluate(train, test, mmd_lambda, output, seed=seed)
             dev_rows.append(row)
             print(f"  Batch {batch}: Acc={row['accuracy']:.4f}  F1={row['macro_f1']:.4f}")
 
@@ -271,7 +275,7 @@ def main(csv_path: Path, output: Path, dev_batches: list[int],
     for batch in final_batches:
         train = df[df["batch_id"] < batch]
         test = df[df["batch_id"] == batch]
-        row = evaluate(train, test, mmd_lambda=0.0, output=output)
+        row = evaluate(train, test, mmd_lambda=0.0, output=output, seed=seed)
         final_rows.append(row)
         print(f"  Batch {batch}: Acc={row['accuracy']:.4f}  F1={row['macro_f1']:.4f}")
 
@@ -280,7 +284,7 @@ def main(csv_path: Path, output: Path, dev_batches: list[int],
     for batch in final_batches:
         train = df[df["batch_id"] < batch]
         test = df[df["batch_id"] == batch]
-        row = evaluate(train, test, mmd_lambda=best_lambda, output=output)
+        row = evaluate(train, test, mmd_lambda=best_lambda, output=output, seed=seed)
         final_rows.append(row)
         print(f"  Batch {batch}: Acc={row['accuracy']:.4f}  F1={row['macro_f1']:.4f}")
 
@@ -297,5 +301,7 @@ if __name__ == "__main__":
     parser.add_argument("--dev-batches", nargs="+", type=int, default=[4, 5, 6, 7, 8])
     parser.add_argument("--final-batches", nargs="+", type=int, default=[9, 10])
     parser.add_argument("--lambdas", nargs="+", type=float, default=[0.0, 0.1, 0.5, 1.0])
+    parser.add_argument("--seed", type=int, default=DEFAULT_SEED,
+                        help="Random seed for one independent run.")
     args = parser.parse_args()
-    main(args.csv, args.output, args.dev_batches, args.final_batches, args.lambdas)
+    main(args.csv, args.output, args.dev_batches, args.final_batches, args.lambdas, args.seed)
