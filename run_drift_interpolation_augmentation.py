@@ -113,7 +113,9 @@ def main(csv_path: Path, output: Path, ratios: list[float], seed: int) -> None:
     print("Selected augmentation ratio:", best_ratio)
 
     final_rows = []
-    for ratio in [0.0, best_ratio]:
+    # If the baseline is selected, do not repeat the same final evaluation.
+    final_ratios = [0.0] if best_ratio == 0.0 else [0.0, best_ratio]
+    for ratio in final_ratios:
         for batch in [9, 10]:
             row = evaluate(df[df.batch_id < batch], df[df.batch_id == batch], ratio, seed)
             row["phase"] = "final"
